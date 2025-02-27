@@ -109,7 +109,7 @@ export async function generateChatResponse(
 
   // OpenAI yanıtı oluştur
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: process.env.OPENAI_MODEL as string,
     messages: [
       { role: 'system', content: systemInstruction.content },
       ...messages.map((msg) => ({

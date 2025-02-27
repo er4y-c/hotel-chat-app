@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import OpenAI from 'openai';
+
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -14,16 +16,25 @@ export default function Home() {
   };
 
   const handleQuerySubmit = async () => {
-    const openai = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
-      dangerouslyAllowBrowser: true,
-    });
-    const completion = await openai.completions.create({
-      model: process.env.NEXT_PUBLIC_AI_MODEL as string,
-      prompt: query,
-      max_tokens: 150,
-    });
-    setResponse(completion.choices[0].text.trim());
+    try {
+      const openai = new OpenAI({
+        apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+        dangerouslyAllowBrowser: true,
+      });
+      const completion = await openai.chat.completions.create({
+        model: process.env.NEXT_PUBLIC_AI_MODEL as string,
+        messages: [{ role: 'user', content: query }],
+        max_tokens: 150,
+      });
+      const messageContent = completion.choices[0]?.message?.content?.trim() ?? '';
+      setResponse(messageContent);
+    } catch (error) {
+      toast.error((error as Error).message, {
+        duration: 5000,
+        position: 'top-right',
+      });
+      setResponse('');
+    }
   };
 
   return (
