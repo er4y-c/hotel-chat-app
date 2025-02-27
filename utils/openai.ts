@@ -1,15 +1,14 @@
-'use server';
-
 import { OpenAI } from 'openai';
 
 import { SystemInstruction } from '@/types/openai';
 import { StockItem } from '@/models/StockItem';
 import { connectDB } from '@/utils/db';
-import { getRelevantDocuments } from '@/utils/langchain';
+// import { getRelevantDocuments } from '@/utils/langchain';
 
 // OpenAI istemcisi
 export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+  dangerouslyAllowBrowser: true,
 });
 
 // Metin için embedding oluşturma
@@ -22,37 +21,20 @@ export async function createEmbedding(text: string): Promise<number[]> {
   return response.data[0].embedding;
 }
 
-// Tüm stok öğeleri için embedding oluşturma (admin işlevi)
-export async function generateAllEmbeddings() {
-  await connectDB();
-
-  const items = await StockItem.find({ embedding: { $exists: false } });
-
-  for (const item of items) {
-    // Ad ve açıklamadan zengin bir temsil oluştur
-    const text = `${item.name}. ${item.description}. Kategori: ${item.category}. ${item.subCategory || ''}`;
-
-    try {
-      const embedding = await createEmbedding(text);
-      item.embedding = embedding;
-      await item.save();
-    } catch (error) {
-      console.error(`Embedding oluşturma hatası (${item.code}):`, error);
-      throw error;
-    }
-
-    // Rate limiting için bekleme
-    await new Promise((resolve) => setTimeout(resolve, 200));
-  }
-}
-
 // Kullanıcı sorgusu için benzer stok öğelerini bulma
-export async function findSimilarItems(query: string, limit: number = 5) {
+export async function findSimilarItems(query: string, limit: number = 2) {
+  if (typeof window !== 'undefined') {
+    throw new Error('findSimilarItems should only be called on the server side');
+  }
+
   await connectDB();
 
   // Sorgu için embedding oluştur
   const queryEmbedding = await createEmbedding(query);
 
+  const itemsWithoutEmbedding = await StockItem.find({ embedding: { $exists: false } });
+  const itemsWithEmbedding = await StockItem.find({ embedding: { $exists: true } });
+  const items2 = await StockItem.find();
   // En yakın öğeleri bul (vektör benzerliği)
   const items = await StockItem.aggregate([
     {
@@ -79,7 +61,10 @@ export async function findSimilarItems(query: string, limit: number = 5) {
       },
     },
   ]);
-
+  console.log('items', items);
+  console.log('items2', items2);
+  console.log('itemsWithoutEmbedding', itemsWithoutEmbedding);
+  console.log('itemsWithEmbedding', itemsWithEmbedding);
   return items;
 }
 
@@ -88,11 +73,15 @@ export async function generateChatResponse(
   messages: Array<{ role: string; content: string }>,
   query: string,
 ): Promise<string> {
+  if (typeof window !== 'undefined') {
+    throw new Error('generateChatResponse should only be called on the server side');
+  }
+
   // İlgili stok öğelerini bul
   const relevantItems = await findSimilarItems(query);
 
   // Langchain ile ilgili belgeleri al
-  const relevantDocuments = await getRelevantDocuments(query);
+  // const relevantDocuments = await getRelevantDocuments(query);
 
   // OpenAI için sistem talimatı oluştur
   const systemInstruction: SystemInstruction = {
@@ -110,14 +99,11 @@ export async function generateChatResponse(
       Alternatifler: ${item.substitutes?.join(', ') || 'Yok'}`,
       )
       .join('\n\n')}
-    
-    İlgili belgeler:
-    ${relevantDocuments.map((doc: { content: string }) => doc.content).join('\n\n')}`,
+    `,
   };
-
   // OpenAI yanıtı oluştur
   const response = await openai.chat.completions.create({
-    model: process.env.OPENAI_MODEL as string,
+    model: process.env.NEXT_PUBLIC_OPENAI_MODEL as string,
     messages: [
       { role: 'system', content: systemInstruction.content },
       ...messages.map((msg) => ({

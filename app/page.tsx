@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { generateChatResponse } from '@/utils/openai';
 import { Message } from '@/types/openai';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
@@ -21,7 +20,7 @@ export default function Home() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  }, [messages]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -40,8 +39,20 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await generateChatResponse(messages, input);
-      const assistantMessage: Message = { role: 'assistant', content: response };
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages, query: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Yanıt alınamadı');
+      }
+
+      const data = await response.json();
+      const assistantMessage: Message = { role: 'assistant', content: data.response };
       setMessages((prev) => [...prev, assistantMessage]);
       textareaRef.current?.focus();
     } catch (error) {
