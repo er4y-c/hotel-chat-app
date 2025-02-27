@@ -1,13 +1,15 @@
-// utils/openai.ts
+'use server';
+
 import { OpenAI } from 'openai';
 
 import { SystemInstruction } from '@/types/openai';
 import { StockItem } from '@/models/StockItem';
 import { connectDB } from '@/utils/db';
+import { getRelevantDocuments } from '@/utils/langchain';
 
 // OpenAI istemcisi
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+export const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY,
 });
 
 // Metin için embedding oluşturma
@@ -89,10 +91,13 @@ export async function generateChatResponse(
   // İlgili stok öğelerini bul
   const relevantItems = await findSimilarItems(query);
 
+  // Langchain ile ilgili belgeleri al
+  const relevantDocuments = await getRelevantDocuments(query);
+
   // OpenAI için sistem talimatı oluştur
   const systemInstruction: SystemInstruction = {
     role: 'system',
-    content: `Sen otel stok yönetimi için bir AI asistanısın. Aşağıdaki stok bilgilerini kullanarak kullanıcının sorgusuna 
+    content: `Sen otel stok yönetimi için bir AI asistanısın. Aşağıdaki stok bilgilerini ve belgeleri kullanarak kullanıcının sorgusuna 
     yanıt ver. Stok öğesi kodlarını her zaman belirt. Eğer kullanıcı belirli bir stok öğesi hakkında bilgi istiyorsa, 
     o öğeyi ve varsa alternatiflerini de öner. Yanıtını Türkçe olarak ver.
     
@@ -104,7 +109,10 @@ export async function generateChatResponse(
       Açıklama: ${item.description}, Mevcut Stok: ${item.currentStock || 'Bilgi yok'}, 
       Alternatifler: ${item.substitutes?.join(', ') || 'Yok'}`,
       )
-      .join('\n\n')}`,
+      .join('\n\n')}
+    
+    İlgili belgeler:
+    ${relevantDocuments.map((doc: { content: string }) => doc.content).join('\n\n')}`,
   };
 
   // OpenAI yanıtı oluştur

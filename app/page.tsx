@@ -2,9 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
-import OpenAI from 'openai';
 import { toast } from 'sonner';
 
+import { generateChatResponse } from '@/utils/openai';
 import { Message } from '@/types/openai';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
@@ -40,30 +40,10 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      // Create conversation history for API
-      const conversationHistory: OpenAI.ChatCompletionMessageParam[] = [
-        ...messages.map((msg) => ({
-          role: msg.role,
-          content: msg.content,
-        })),
-        { role: 'user', content: input },
-      ];
-
-      const openai = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
-        dangerouslyAllowBrowser: true,
-      });
-
-      const completion = await openai.chat.completions.create({
-        model: process.env.NEXT_PUBLIC_AI_MODEL as string,
-        messages: conversationHistory,
-        max_tokens: 500,
-      });
-
-      const responseContent = completion.choices[0]?.message?.content?.trim() ?? '';
-
-      const assistantMessage: Message = { role: 'assistant', content: responseContent };
+      const response = await generateChatResponse(messages, input);
+      const assistantMessage: Message = { role: 'assistant', content: response };
       setMessages((prev) => [...prev, assistantMessage]);
+      textareaRef.current?.focus();
     } catch (error) {
       toast.error((error as Error).message, {
         duration: 5000,

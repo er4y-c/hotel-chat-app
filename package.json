@@ -20,6 +20,8 @@
     "axios": "^1.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
+    "langchain": "^0.3.19",
     "lucide-react": "^0.476.0",
     "mongoose": "^8.11.0",
     "next": "15.2.0",
