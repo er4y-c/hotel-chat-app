@@ -1,7 +1,7 @@
 /* import { MongoClient } from 'mongodb';
 import LangChain from 'langchain';
 
-const client = new MongoClient(process.env.NEXT_PUBLIC_MONGODB_URI!);
+const client = new MongoClient(process.env.MONGODB_URI!);
 
 export async function getRelevantDocuments(query: string) {
   await client.connect();

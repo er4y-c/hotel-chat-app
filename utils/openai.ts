@@ -7,7 +7,7 @@ import { connectDB } from '@/utils/db';
 
 // OpenAI istemcisi
 export const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+  apiKey: process.env.OPENAI_KEY,
   dangerouslyAllowBrowser: true,
 });
 
@@ -32,9 +32,6 @@ export async function findSimilarItems(query: string, limit: number = 2) {
   // Sorgu için embedding oluştur
   const queryEmbedding = await createEmbedding(query);
 
-  const itemsWithoutEmbedding = await StockItem.find({ embedding: { $exists: false } });
-  const itemsWithEmbedding = await StockItem.find({ embedding: { $exists: true } });
-  const items2 = await StockItem.find();
   // En yakın öğeleri bul (vektör benzerliği)
   const items = await StockItem.aggregate([
     {
@@ -61,10 +58,6 @@ export async function findSimilarItems(query: string, limit: number = 2) {
       },
     },
   ]);
-  console.log('items', items);
-  console.log('items2', items2);
-  console.log('itemsWithoutEmbedding', itemsWithoutEmbedding);
-  console.log('itemsWithEmbedding', itemsWithEmbedding);
   return items;
 }
 
@@ -103,7 +96,7 @@ export async function generateChatResponse(
   };
   // OpenAI yanıtı oluştur
   const response = await openai.chat.completions.create({
-    model: process.env.NEXT_PUBLIC_OPENAI_MODEL as string,
+    model: process.env.OPENAI_MODEL!,
     messages: [
       { role: 'system', content: systemInstruction.content },
       ...messages.map((msg) => ({
