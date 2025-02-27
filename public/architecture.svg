@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8fafc" rx="10" ry="10"/>
+  
+  <!-- Components -->
+  <!-- Frontend -->
+  <rect x="50" y="50" width="200" height="120" rx="10" ry="10" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+  <text x="150" y="100" font-family="Arial" font-size="18" text-anchor="middle" fill="#0284c7" font-weight="bold">Next.js Frontend</text>
+  <text x="150" y="125" font-family="Arial" font-size="14" text-anchor="middle" fill="#0284c7">TypeScript + Tailwind</text>
+  <text x="150" y="145" font-family="Arial" font-size="14" text-anchor="middle" fill="#0284c7">+ Shadcn/UI</text>
+  
+  <!-- API Routes -->
+  <rect x="300" y="50" width="200" height="120" rx="10" ry="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+  <text x="400" y="100" font-family="Arial" font-size="18" text-anchor="middle" fill="#16a34a" font-weight="bold">Next.js API Routes</text>
+  <text x="400" y="125" font-family="Arial" font-size="14" text-anchor="middle" fill="#16a34a">Sohbet API</text>
+  <text x="400" y="145" font-family="Arial" font-size="14" text-anchor="middle" fill="#16a34a">Vektör Arama</text>
+  
+  <!-- MongoDB -->
+  <rect x="50" y="220" width="200" height="120" rx="10" ry="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="150" y="270" font-family="Arial" font-size="18" text-anchor="middle" fill="#7c3aed" font-weight="bold">MongoDB</text>
+  <text x="150" y="295" font-family="Arial" font-size="14" text-anchor="middle" fill="#7c3aed">Stok Verileri</text>
+  <text x="150" y="315" font-family="Arial" font-size="14" text-anchor="middle" fill="#7c3aed">Vektör Embeddings</text>
+  
+  <!-- OpenAI -->
+  <rect x="550" y="50" width="200" height="120" rx="10" ry="10" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+  <text x="650" y="100" font-family="Arial" font-size="18" text-anchor="middle" fill="#d97706" font-weight="bold">OpenAI API</text>
+  <text x="650" y="125" font-family="Arial" font-size="14" text-anchor="middle" fill="#d97706">Embeddings</text>
+  <text x="650" y="145" font-family="Arial" font-size="14" text-anchor="middle" fill="#d97706">Chat Completion</text>
+  
+  <!-- RAG System -->
+  <rect x="300" y="220" width="450" height="230" rx="10" ry="10" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/>
+  <text x="525" y="250" font-family="Arial" font-size="18" text-anchor="middle" fill="#ea580c" font-weight="bold">RAG Sistemi</text>
+  
+  <!-- RAG Components -->
+  <rect x="320" y="270" width="200" height="80" rx="5" ry="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="420" y="305" font-family="Arial" font-size="16" text-anchor="middle" fill="#ea580c">Vektör Dönüştürücü</text>
+  <text x="420" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#ea580c">OpenAI Embeddings API</text>
+  
+  <rect x="530" y="270" width="200" height="80" rx="5" ry="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="630" y="305" font-family="Arial" font-size="16" text-anchor="middle" fill="#ea580c">Bağlam Oluşturucu</text>
+  <text x="630" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#ea580c">En Alakalı Verileri Seçme</text>
+  
+  <rect x="425" y="360" width="200" height="80" rx="5" ry="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="525" y="395" font-family="Arial" font-size="16" text-anchor="middle" fill="#ea580c">Yanıt Üreteci</text>
+  <text x="525" y="415" font-family="Arial" font-size="12" text-anchor="middle" fill="#ea580c">OpenAI ChatCompletion</text>
+  
+  <!-- Arrows -->
+  <!-- Frontend to API -->
+  <line x1="250" y1="110" x2="300" y2="110" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to OpenAI -->
+  <line x1="500" y1="110" x2="550" y2="110" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to MongoDB -->
+  <line x1="310" y1="170" x2="210" y2="220" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- API to RAG -->
+  <line x1="400" y1="170" x2="400" y2="220" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- MongoDB to RAG -->
+  <line x1="250" y1="280" x2="300" y2="280" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- RAG to OpenAI -->
+  <line x1="650" y1="270" x2="650" y2="170" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+  </defs>
+</svg>

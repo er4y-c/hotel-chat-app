@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hotel Chat App
 
-## Getting Started
+Bu proje, Typescript, Next.js, Shadcn ve MongoDB kullanılarak oluşturulmuş modern ve basit bir arayüze sahip yapay zeka destekli bir sohbet uygulamasıdır. Projenin amacı bir otele ait olabilecek örnek bir MongoDB veritabanında yer alan döküman kayıtlarını OpenAI modelleriyle entegreli bir şekilde kullanarak kullanıcıların sorularını cevaplayacak bir sistem geliştirmektir.
 
-First, run the development server:
+## Kurulum
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Bu depoyu kendi localinize klonlayın.
+
+```command
+  git clone https://github.com/er4y-c/hotel-chat-app.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Bağımlılıkları kurun.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```command
+  yarn install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. .env.example.local dosyasındaki bilgileri kullanarak kendi .env.production.local ve .env.development.local dosyalarınızı oluşturun.
 
-## Learn More
+4. Uygulamayı development modunda başlatın.
 
-To learn more about Next.js, take a look at the following resources:
+```command
+  yarn dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Kullanılan Teknolojiler
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- React.js 19
+- Next.js 15
+- Shadcn
+- Typescript
+- OpenAI
+- MongoDB
+- Langchain
 
-## Deploy on Vercel
+## Sistem Mimarisi
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Sistem Mimarisi](/public/architecture.svg)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Arayüz
+
+![Örnek Arayüz](/public/ui.png)
